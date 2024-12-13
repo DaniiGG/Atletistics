@@ -9,4 +9,6 @@ Los css están en app\src\main\java\com\example\Css
 Las ventanas están en app\src\main\java\com\example\Ventanas
 
 
-Al clonar el repositorio hay que abrir el archivo que se llama "app" dentro del repositorio clonado
+Importante!! Al clonar el repositorio hay que abrir el archivo que se llama "app" dentro del repositorio clonado.
+
+Un atleta o una competición no se puede borrar si hay una resultado con esa competición o atleta.
