@@ -4,6 +4,7 @@
  */
 package com.example.Controladores;
 
+import com.example.Controladores.Controlador;
 import com.example.Modelos.Atleta;
 import com.example.Modelos.Competicion;
 import com.example.Modelos.Resultados;
@@ -28,6 +29,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -41,25 +43,28 @@ import org.w3c.dom.Node;
  *
  * @author danie
  */
-public class EditarInsertarResultadoControlador implements Initializable{
-    
+public class EditarInsertarResultadoControlador implements Initializable {
+
     List<ValidationSupport> validadores;
-    
+
     private Controlador controladorPrincipal;
     Statement st;
     ResultSet rs;
-    
+
     public void setControladorPrincipal(Controlador controladorPrincipal) {
         this.controladorPrincipal = controladorPrincipal;
     }
-    
+
     Controlador conexionHelper = new Controlador();
-    
+
     Connection conexion;
-    
+    @FXML
+    private Button confirmar;
+    @FXML
+    private Button cancelar;
+
     @FXML
     private Label labelAñadir;
-    
 
     @FXML
     private TextField txtDorsal;
@@ -73,187 +78,168 @@ public class EditarInsertarResultadoControlador implements Initializable{
     private Resultados resultado;
     @FXML
     private ComboBox<String> comboCompe;
-    
+
     private ObservableList<String> listaCompeticiones = FXCollections.observableArrayList(); // Lista para el ComboBox
     private FilteredList<String> filteredCompeticiones;
-    
+
     @FXML
     private ComboBox<String> comboAtleta;
-    
+
     private ObservableList<String> listaAtletas = FXCollections.observableArrayList(); // Lista para el ComboBox
     private FilteredList<String> filteredAtletas;
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         try {
             conexion = conexionHelper.getConnection();
             if (conexion != null) {
                 this.st = conexion.createStatement();
             }
             // Cargar y configurar ComboBox de atletas
-            cargarNombresAtletas();
+            Controlador.cargarNombresAtletas(conexion,listaAtletas);
             filteredAtletas = new FilteredList<>(listaAtletas, p -> true);
-            configurarComboBox(comboAtleta, filteredAtletas);
+            Controlador.configurarComboBox(comboAtleta, filteredAtletas);
 
             // Cargar y configurar ComboBox de competiciones
-            cargarNombresCompeticiones();
+            Controlador.cargarNombresEventos(conexion, listaCompeticiones);
             filteredCompeticiones = new FilteredList<>(listaCompeticiones, p -> true);
-            configurarComboBox(comboCompe, filteredCompeticiones);
+            Controlador.configurarComboBox(comboCompe, filteredCompeticiones);
 
         } catch (IOException | SQLException e) {
             System.out.println("Error al inicializar: " + e.getMessage());
         }
-        
-        
+
         ValidationSupport validationPuesto = new ValidationSupport();
         ValidationSupport validationDorsal = new ValidationSupport();
         ValidationSupport validationMarca = new ValidationSupport();
         ValidationSupport validationAtleta = new ValidationSupport();
         ValidationSupport validationCompe = new ValidationSupport();
-        
+
         Validador.validacionNumero(validationPuesto, txtPuesto, 1, 30, "Los puestos pueden ser de 1 a 30");
         Validador.validacionNumero(validationDorsal, txtDorsal, 3, 1000, "Los dorsales pueden ser de 1 a 1000");
         Validador.validacionTexto(validationMarca, txtMarca, 3, 50, "Las marcas deben tener entre 2 y 15 caracteres");
-        
+
         Validador.validacionCampoVacio(validationAtleta, comboAtleta, "Debe seleccionar un atleta");
         Validador.validacionCampoVacio(validationCompe, comboCompe, "Debe seleccionar una competición");
-        
-         validadores = new ArrayList<>();
+
+        validadores = new ArrayList<>();
         validadores.addAll(Arrays.asList(validationPuesto, validationDorsal, validationMarca, validationAtleta, validationCompe));
 
-   
     }
-    
-    private void configurarComboBox(ComboBox<String> comboBox, FilteredList<String> filteredList) {
-        comboBox.setItems(filteredList);
-        comboBox.setEditable(true);
-
-        // Configurar autocompletar
-        TextField editor = comboBox.getEditor();
-        editor.textProperty().addListener((obs, oldText, newText) -> {
-            filteredList.setPredicate(item -> item.toLowerCase().startsWith(newText.toLowerCase()));
-            if (!comboBox.isShowing()) {
-                comboBox.show();
-            }
-        });
-
-        // Manejar la selección del ComboBox
-        comboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                editor.positionCaret(editor.getText().length());
-            }
-        });
-    }
-    
-    
     
     public void iniciarVentana(Resultados resultado) {
         this.resultado = resultado;
-        
+
         if (resultado != null) { // Modo edición
-             labelAñadir.setText("Editando resultado");
+            labelAñadir.setText("Editando resultado");
             comboAtleta.setValue(resultado.getNombreAtleta());
             txtMarca.setText(resultado.getMarca());
             txtPuesto.setText(String.valueOf(resultado.getPuesto()));
             txtDorsal.setText(String.valueOf(resultado.getDorsal()));
             comboCompe.setValue(resultado.getNombreCompe());
         } else { // Modo inserción
-             labelAñadir.setText("Añadiendo resultado");
+            labelAñadir.setText("Añadiendo resultado");
             comboAtleta.setValue(null);
             txtMarca.clear();
             txtPuesto.clear();
             txtDorsal.clear();
             comboCompe.setValue(null);
         }
+        Controlador.establecerIconoSubVentanas(confirmar, cancelar);
     }
 
     @FXML
-private void confirmar() {
-    
-    boolean todoOK = true;
-    for (ValidationSupport validationSupport : validadores) {
-        todoOK = (todoOK && validationSupport.getValidationResult().getErrors().isEmpty());
-    }
-    if (!todoOK) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Errores en el formulario");
-        alert.setContentText("Corrige los errores antes de confirmar.");
-        alert.showAndWait();
-        return;
-    }else if (txtDorsal.getText().isEmpty() || txtMarca.getText().isEmpty() ||
-         txtPuesto.getText().isEmpty() || comboAtleta.getValue() == null || 
-         comboCompe.getValue() == null) {
+    private void confirmar() {
 
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Errores en el formulario");
-        alert.setContentText("Todos los campos deben ser completados.");
-        alert.showAndWait();
-        return;
-    }
-         
-    String marca = txtMarca.getText();
-    int puesto = Integer.parseInt(txtPuesto.getText());
-    int dorsal = Integer.parseInt(txtDorsal.getText());
-    String nombreAtleta = comboAtleta.getValue();
-    String nombreCompe = comboCompe.getValue();
+        boolean todoOK = true;
+        for (ValidationSupport validationSupport : validadores) {
+            todoOK = (todoOK && validationSupport.getValidationResult().getErrors().isEmpty());
+        }
+        if (!todoOK) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errores en el formulario");
+            alert.setContentText("Corrige los errores antes de confirmar.");
+            alert.showAndWait();
+            return;
+        } else if (txtDorsal.getText().isEmpty() || txtMarca.getText().isEmpty()
+                || txtPuesto.getText().isEmpty() || comboAtleta.getValue() == null
+                || comboCompe.getValue() == null) {
 
-    Atleta atleta = obtenerAtletaPorNombre(nombreAtleta);
-    Competicion competicion = obtenerCompeticionPorNombre(nombreCompe);
-
-    if (atleta == null) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Ese atleta NO existe!!");
-        alert.setContentText("Debes elegir un atleta que exista.");
-        alert.showAndWait();
-        return;
-    }
-
-    if (competicion == null) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Esa competición NO existe!!");
-        alert.setContentText("Debes elegir una competición que exista.");
-        alert.showAndWait();
-        return;
-    }
-
-    try {
-        if (resultado == null) { // Modo inserción
-            String insertQuery = "INSERT INTO resultados (dni_atleta, id_competicion, marca, puesto, dorsal) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = this.conexion.prepareStatement(insertQuery);
-            preparedStatement.setString(1, atleta.getDni()); // DNI del atleta
-            preparedStatement.setInt(2, competicion.getId_competicion()); // ID de la competición
-            preparedStatement.setString(3, marca); // Marca
-            preparedStatement.setInt(4, puesto); // Puesto
-            preparedStatement.setInt(5, dorsal); // Dorsal
-            preparedStatement.executeUpdate();
-            System.out.println("Resultado insertado correctamente.");
-        } else { // Modo edición
-            String updateQuery = "UPDATE resultados SET dni_atleta = ?, id_competicion = ?, marca = ?, puesto = ?, dorsal = ? WHERE id_resultado = ?";
-            PreparedStatement preparedStatement = this.conexion.prepareStatement(updateQuery);
-            preparedStatement.setString(1, atleta.getDni()); // DNI del atleta
-            preparedStatement.setInt(2, competicion.getId_competicion()); // ID de la competición
-            preparedStatement.setString(3, marca); // Marca
-            preparedStatement.setInt(4, puesto); // Puesto
-            preparedStatement.setInt(5, dorsal); // Dorsal
-            preparedStatement.setInt(6, resultado.getId()); // ID del resultado a actualizar
-            preparedStatement.executeUpdate();
-            System.out.println("Resultado actualizado correctamente.");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Errores en el formulario");
+            alert.setContentText("Todos los campos deben ser completados.");
+            alert.showAndWait();
+            return;
         }
 
-        if (controladorPrincipal != null) {
-            controladorPrincipal.actualizarResultadosTable();
+        String marca = txtMarca.getText();
+        int puesto = Integer.parseInt(txtPuesto.getText());
+        int dorsal = Integer.parseInt(txtDorsal.getText());
+        String nombreAtleta = comboAtleta.getValue();
+        String nombreCompe = comboCompe.getValue();
+
+        Atleta atleta = obtenerAtletaPorNombre(nombreAtleta);
+        Competicion competicion = obtenerCompeticionPorNombre(nombreCompe);
+
+        if (atleta == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Ese atleta NO existe!!");
+            alert.setContentText("Debes elegir un atleta que exista.");
+            alert.showAndWait();
+            return;
         }
 
-        Stage stage = (Stage) comboAtleta.getScene().getWindow();
-        stage.close();
-    } catch (SQLException e) {
-        System.out.println("Error al guardar el resultado: " + e.getMessage());
+        if (competicion == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Esa competición NO existe!!");
+            alert.setContentText("Debes elegir una competición que exista.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            if (resultado == null) { // Modo inserción
+                String insertQuery = "INSERT INTO resultados (dni_atleta, id_competicion, marca, puesto, dorsal) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement preparedStatement = this.conexion.prepareStatement(insertQuery);
+                preparedStatement.setString(1, atleta.getDni()); // DNI del atleta
+                preparedStatement.setInt(2, competicion.getId_competicion()); // ID de la competición
+                preparedStatement.setString(3, marca); // Marca
+                preparedStatement.setInt(4, puesto); // Puesto
+                preparedStatement.setInt(5, dorsal); // Dorsal
+                preparedStatement.executeUpdate();
+                System.out.println("Resultado insertado correctamente.");
+            } else { // Modo edición
+                String updateQuery = "UPDATE resultados SET dni_atleta = ?, id_competicion = ?, marca = ?, puesto = ?, dorsal = ? WHERE id_resultado = ?";
+                PreparedStatement preparedStatement = this.conexion.prepareStatement(updateQuery);
+                preparedStatement.setString(1, atleta.getDni()); // DNI del atleta
+                preparedStatement.setInt(2, competicion.getId_competicion()); // ID de la competición
+                preparedStatement.setString(3, marca); // Marca
+                preparedStatement.setInt(4, puesto); // Puesto
+                preparedStatement.setInt(5, dorsal); // Dorsal
+                preparedStatement.setInt(6, resultado.getId()); // ID del resultado a actualizar
+                preparedStatement.executeUpdate();
+                System.out.println("Resultado actualizado correctamente.");
+            }
+            
+             if (controladorPrincipal != null) {
+                    String mensaje = (resultado == null) 
+                        ? "Resultado insertado correctamente." 
+                        : "Resultado actualizado correctamente.";
+
+                    controladorPrincipal.mostrarMensajeSuperpuesto(mensaje, 5000, controladorPrincipal.mensajeSuperpuestoResul); // Mensaje por 3 segundos
+                    controladorPrincipal.realizarOperacionConLoader(controladorPrincipal.PIResul, controladorPrincipal.tableViewResultados);
+                    controladorPrincipal.actualizarResultadosTable(); // Actualizar el grid después del mensaje
+                }
+
+            Stage stage = (Stage) comboAtleta.getScene().getWindow();
+            stage.close();
+        } catch (SQLException e) {
+            System.out.println("Error al guardar el resultado: " + e.getMessage());
+        }
     }
-}
 
     private Atleta obtenerAtletaPorNombre(String nombreCompleto) {
         String query = "SELECT * FROM atletas WHERE CONCAT(nombre, ' ', apellidos) = ?";
@@ -282,7 +268,7 @@ private void confirmar() {
 
         return atleta;
     }
-    
+
     private Competicion obtenerCompeticionPorNombre(String nombreCompe) {
         String query = "SELECT * FROM competiciones WHERE nombre = ?";
         Competicion competicion = null;
@@ -311,43 +297,10 @@ private void confirmar() {
         return competicion;
     }
 
-    
-    private void cargarNombresAtletas() {
-        String query = "SELECT CONCAT(nombre, ' ', apellidos) AS nombreCompleto FROM atletas";
-
-        try (PreparedStatement preparedStatement = conexion.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            while (resultSet.next()) {
-                listaAtletas.add(resultSet.getString("nombreCompleto"));
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error al cargar nombres de atletas: " + e.getMessage());
-        }
-    }
-    
-    private void cargarNombresCompeticiones() {
-        String query = "SELECT nombre FROM competiciones";
-
-        try (PreparedStatement preparedStatement = conexion.prepareStatement(query);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
-            while (resultSet.next()) {
-                listaCompeticiones.add(resultSet.getString("nombre"));
-            }
-
-        } catch (SQLException e) {
-            System.out.println("Error al cargar nombres de competiciones: " + e.getMessage());
-        }
-    }
-
-    
     @FXML
     void cancelar() {
         Stage stage = (Stage) comboAtleta.getScene().getWindow();
         stage.close();
     }
 
-    
 }

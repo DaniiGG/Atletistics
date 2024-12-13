@@ -1,0 +1,84 @@
+@font-face {
+    font-family: "Montserrat";
+    src: url("../../../font/Montserrat-Italic.ttf");
+}
+
+.btn {
+    -fx-font-weight: bold;
+    -fx-border-radius: 0;
+    -fx-border-width: 1px;
+    
+}
+
+/* Hover para el fondo del botón */
+.btn:hover {
+    -fx-background-color: rgb(254, 254, 254);
+}
+
+/* Hover para el color de texto y borde de los botones info */
+.btn-info:hover {
+    -fx-text-fill: #4fbfe1;
+    -fx-border-color: #4fbfe1;
+}
+
+/* Hover para el color de texto y borde de los botones danger */
+.btn-danger:hover {
+    -fx-text-fill: #de534a;
+    -fx-border-color: #de534a;
+}
+
+/* Hover para el color de texto y borde de los botones primary */
+.btn-primary:hover {
+    -fx-text-fill: #2b77ba;
+    -fx-border-color: #2b77ba;
+}
+
+.btn-success:hover {
+    -fx-text-fill: #50ba54;
+    -fx-border-color: #50ba54;
+}
+.prueba{
+    -fx-display: flex;
+    -fx-justify-content: space-between
+}
+TableView {
+    -fx-border-color: #4fbfe1; /* Bordes de la tabla */
+    -fx-border-width: 1;
+    -fx-background-color: #f9f9f9; /* Color de fondo */
+}
+
+
+
+TableCell {
+    -fx-background-color: #ffffff;
+    -fx-alignment: CENTER;
+    -fx-padding: 10px;
+}
+
+.mensajeSuperpuesto {
+    -fx-border-width: 0 0 0 3;
+    -fx-border-color: #50ba54;
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-size: 12px;
+    -fx-padding: 5px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.0, 2, 2);
+}
+
+ProgressIndicator {
+    -fx-accent: #4fbfe1; 
+    -fx-control-inner-background: #eeeeee; 
+    -fx-border-radius: 50%; 
+}
+
+.tableColunmHead Label{
+     -fx-font-family: "Montserrat";
+     -fx-background-color: #4fbfe1;
+    -fx-text-fill: white;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+

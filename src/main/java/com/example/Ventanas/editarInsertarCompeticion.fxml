@@ -51,8 +51,8 @@
       </GridPane>
       <HBox alignment="CENTER" prefHeight="0.0" prefWidth="362.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#confirmar" text="Aceptar" />
-            <Button mnemonicParsing="false" onAction="#cancelar" text="Cancelar">
+            <Button onAction="#confirmar" text="_Aceptar" />
+            <Button onAction="#cancelar" text="_Cancelar">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>

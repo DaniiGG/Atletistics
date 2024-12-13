@@ -27,18 +27,21 @@ dependencies {
 
 implementation "org.mariadb.jdbc:mariadb-java-client:3.1.2"
 implementation 'org.controlsfx:controlsfx:11.1.2'
+implementation 'org.openjfx:javafx-web:23'
+implementation 'org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0'
+implementation 'com.google.code.gson:gson:2.8.8'
 
 
 }
 
-mainClassName = 'com.example.Atletistics.Main'
+mainClassName = 'Atletistics.Main'
 
 //Para el empaquetado
 sourceSets {
   main {
     resources {
         srcDirs = ["src/main/java","src/main/resources"]
-        includes = ["**/*.fxml","**/*.properties", "**/*.jpg", "**/*.png", "**/*.jpeg"]  //Importante para poder abrir una extensión no reconocida
+        includes = ["**/*.fxml","**/*.properties", "**/*.jpg", "**/*.png", "**/*.jpeg","**/*.css"]  //Importante para poder abrir una extensión no reconocida
     }
   }
 }

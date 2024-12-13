@@ -66,6 +66,11 @@ public class EditarInsertarCompeticionControlador implements Initializable{
     Connection conexion;
     
     @FXML
+    private Button confirmar;
+    @FXML
+    private Button cancelar;
+    
+    @FXML
     private Button fotoBtn;
     
     @FXML
@@ -179,6 +184,7 @@ public class EditarInsertarCompeticionControlador implements Initializable{
             datePickerFecha.setValue(null);
             txtPremio.clear();
         }
+        Controlador.establecerIconoSubVentanas(confirmar, cancelar);
     }
     
 
@@ -273,8 +279,16 @@ public class EditarInsertarCompeticionControlador implements Initializable{
             }
         }
         if (controladorPrincipal != null) {
-            controladorPrincipal.actualizarCompeticionesTable();
+                    String mensaje = (competicion == null) 
+                        ? "Competición insertada correctamente." 
+                        : "Competición actualizada correctamente.";
+
+                    controladorPrincipal.mostrarMensajeSuperpuesto(mensaje, 5000, controladorPrincipal.mensajeSuperpuestoCompe); // Mensaje por 3 segundos
+                    controladorPrincipal.realizarOperacionConLoader(controladorPrincipal.PICompe, controladorPrincipal.tableViewCompeticiones);
+                    controladorPrincipal.actualizarCompeticionesTable();
+                    controladorPrincipal.actualizarResultadosTable();
         }
+
         if (competicion == null) { 
             // Modo inserción
             competicion = new Competicion(0, nombre, lugar, fechaSQL, tipo, premio, imagen);

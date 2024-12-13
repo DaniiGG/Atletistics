@@ -72,6 +72,11 @@ public class EditarInsertarAtletaControlador extends Controlador implements Init
     Connection conexion;
     
     @FXML
+    private Button confirmar;
+    @FXML
+    private Button cancelar;
+    
+    @FXML
     private CheckBox activoCheck;
     
     @FXML
@@ -193,6 +198,7 @@ public class EditarInsertarAtletaControlador extends Controlador implements Init
             txtClub.clear();
             activoCheck.setSelected(false);
         }
+        Controlador.establecerIconoSubVentanas(confirmar, cancelar);
     }
 
     @FXML
@@ -307,7 +313,14 @@ public class EditarInsertarAtletaControlador extends Controlador implements Init
             PauseTransition pause = new PauseTransition(Duration.millis(1000));
             pause.setOnFinished(event -> {
                 if (controladorPrincipal != null) {
-                    controladorPrincipal.actualizarGrid();  
+                    String mensaje = (atleta == null) 
+                        ? "Atleta agregado correctamente." 
+                        : "Atleta actualizado correctamente.";
+
+                    controladorPrincipal.mostrarMensajeSuperpuesto(mensaje, 5000, controladorPrincipal.mensajeSuperpuestoAtle); // Mensaje por 3 segundos
+                    controladorPrincipal.realizarOperacionConLoader(controladorPrincipal.PIAtleta, controladorPrincipal.scrollPaneAtletas);
+                    controladorPrincipal.actualizarGrid(null); 
+                    controladorPrincipal.actualizarResultadosTable();
                 }
             });
             pause.play();

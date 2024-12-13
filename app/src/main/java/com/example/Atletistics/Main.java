@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.kordamp.bootstrapfx.BootstrapFX;
 
 /** 
  * Plantilla JAVAFX
@@ -36,9 +37,13 @@ public class Main extends Application {
         }
             
         Parent root = FXMLLoader.load(getClass().getResource("../Ventanas/Atletistics.fxml"));
+        
 
         
         Scene scene=new Scene(root);
+        scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
+        scene.getStylesheets().add(getClass().getResource("../Css/atletistics.css").toString());
+        
         primaryStage.setScene(scene);
         primaryStage.setTitle("Atletistics");
 
