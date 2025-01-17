@@ -1,0 +1,208 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Blank_A4" language="java" pageWidth="780" pageHeight="842" columnWidth="760" leftMargin="0" rightMargin="20" topMargin="20" bottomMargin="20" uuid="80e69dfb-062c-4c17-8eb0-a2787ab4a2d7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.callouts" value="callouts.1.bounds=-180,60,5,5\ncallouts.1.bg=255,255,0\ncallouts.1.fg=0,0,0\ncallouts.1.text=danie 11/1/25 13\:45\n"/>
+	<style name="Style1">
+		<conditionalStyle mode="Opaque" backcolor="#4FBFE1">
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+		</conditionalStyle>
+	</style>
+	<parameter name="Parametro" class="java.lang.String"/>
+	<query language="sql"><![CDATA[SELECT 
+    r.puesto, 
+    c.nombre AS evento, 
+    r.dorsal, 
+    a.foto, 
+    a.nombre, 
+    a.apellidos, 
+    a.club, 
+    r.marca, 
+    c.fecha,
+  
+    
+    -- Convertir la marca (tiempo) en minutos
+    CASE
+        WHEN INSTR(r.marca, 'h') > 0 THEN
+            CAST(SUBSTRING_INDEX(r.marca, 'h', 1) AS UNSIGNED) * 60 + 
+            CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(r.marca, 'h', -1), 'm', 1) AS UNSIGNED)
+        WHEN INSTR(r.marca, 'm') > 0 AND INSTR(r.marca, 'h') = 0 THEN
+            CAST(SUBSTRING_INDEX(r.marca, 'm', 1) AS UNSIGNED)
+        ELSE 0
+    END AS tiempo_en_minutos
+FROM resultados r
+JOIN atletas a ON r.dni_atleta = a.dni
+JOIN competiciones c ON r.id_competicion = c.id_competicion
+WHERE a.nombre LIKE $P{Parametro}
+ORDER BY r.puesto ASC;]]></query>
+	<field name="puesto" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="puesto"/>
+		<property name="com.jaspersoft.studio.field.label" value="puesto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="resultados"/>
+	</field>
+	<field name="evento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="evento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="competiciones"/>
+	</field>
+	<field name="dorsal" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="dorsal"/>
+		<property name="com.jaspersoft.studio.field.label" value="dorsal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="resultados"/>
+	</field>
+	<field name="foto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="foto"/>
+		<property name="com.jaspersoft.studio.field.label" value="foto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="atletas"/>
+	</field>
+	<field name="nombre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="atletas"/>
+	</field>
+	<field name="apellidos" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="apellidos"/>
+		<property name="com.jaspersoft.studio.field.label" value="apellidos"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="atletas"/>
+	</field>
+	<field name="club" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="club"/>
+		<property name="com.jaspersoft.studio.field.label" value="club"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="atletas"/>
+	</field>
+	<field name="marca" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marca"/>
+		<property name="com.jaspersoft.studio.field.label" value="marca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="resultados"/>
+	</field>
+	<field name="fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="competiciones"/>
+	</field>
+	<field name="tiempo_en_minutos" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="tiempo_en_minutos"/>
+		<property name="com.jaspersoft.studio.field.label" value="tiempo_en_minutos"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="staticText" uuid="c6fe6900-f4f3-4f7c-9eca-fe4fb27129df" mode="Opaque" x="310" y="0" width="510" height="79" forecolor="#FFFFFF" backcolor="#4FBFE1" fontName="SansSerif" fontSize="45.0" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[Informe resultados]]></text>
+			<box leftPadding="15"/>
+		</element>
+		<element kind="image" uuid="d0f10899-92b4-479c-9d08-e0d81c9119af" stretchType="NoStretch" mode="Opaque" x="-20" y="0" width="330" height="79" forecolor="#C689CC" backcolor="#4FBFE1" hImageAlign="Center">
+			<expression><![CDATA["C:/Users/danie/Downloads/Atletistics_nb.png"]]></expression>
+		</element>
+		<property name="com.jaspersoft.studio.layout"/>
+	</title>
+	<pageHeader height="35" splitType="Stretch"/>
+	<columnHeader height="40" splitType="Stretch">
+		<element kind="staticText" uuid="0d4f926d-1434-4dd3-957f-f748e66be32a" x="90" y="0" width="40" height="30" bold="true">
+			<text><![CDATA[Puesto]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="6360541d-6f59-4cac-b243-3aa36e305283" x="140" y="0" width="80" height="30" bold="true">
+			<text><![CDATA[Evento]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="cdef68c8-135c-4626-84bd-b03b87247af5" x="230" y="0" width="70" height="30" bold="true">
+			<text><![CDATA[Dorsal]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="8ca27713-6ec1-413d-8f37-d563f25d81ef" x="310" y="0" width="80" height="30" bold="true">
+			<text><![CDATA[Nombre]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="733fcbb9-31ef-4c28-9ee4-0f9660d85cd0" x="400" y="0" width="90" height="30" bold="true">
+			<text><![CDATA[Apellidos]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="3351027c-a06a-4e9c-94c4-4017d16e623e" x="500" y="0" width="100" height="30" bold="true">
+			<text><![CDATA[Club]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="1ab42593-caaf-4bb5-ac89-c2a7786d01cc" x="610" y="0" width="90" height="30" bold="true">
+			<text><![CDATA[Marca]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="be132b6a-42fa-42ae-8fe8-efbc0aa49e2b" x="710" y="0" width="60" height="30" bold="true">
+			<text><![CDATA[Fecha]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="3d259913-5726-470e-b37a-0d91833494a1" x="10" y="0" width="60" height="30" bold="true">
+			<text><![CDATA[Foto]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="34" splitType="Stretch">
+			<element kind="frame" uuid="18005b30-9495-4e92-b7e1-4b86e5723fbd" x="-2" y="0" width="782" height="30" style="Style1">
+				<element kind="textField" uuid="aed4fa92-c047-4b13-8153-6136bc0d6ed2" x="90" y="0" width="50" height="30" vTextAlign="Middle" style="Style1">
+					<expression><![CDATA[$F{puesto}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="326495c2-972d-4988-8ae5-3d029a604e8a"/>
+				</element>
+				<element kind="textField" uuid="6dc1dc50-6088-439e-ab8d-5f34f654713f" x="140" y="0" width="90" height="30" vTextAlign="Middle" style="Style1">
+					<expression><![CDATA[$F{evento}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="624f0461-f31d-4854-b0af-3a6ce4da9188"/>
+				</element>
+				<element kind="textField" uuid="7d02d76c-f786-4023-b4c0-8cc7b29a5d91" x="230" y="0" width="80" height="30" vTextAlign="Middle" style="Style1">
+					<expression><![CDATA[$F{dorsal}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2e7a9289-f703-47ba-9d38-443b6a37ecba"/>
+				</element>
+				<element kind="textField" uuid="f5cee497-477f-4d36-9c13-a71c3e731b29" x="310" y="0" width="90" height="30" vTextAlign="Middle" style="Style1">
+					<expression><![CDATA[$F{nombre}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="89024105-f40f-41f4-a2b4-15cf1c779563"/>
+				</element>
+				<element kind="textField" uuid="2ac5d62f-e8ca-46a5-9542-76d4831bd124" x="400" y="0" width="100" height="30" vTextAlign="Middle" style="Style1">
+					<expression><![CDATA[$F{apellidos}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="534a6e9f-819a-42ff-af7b-ab9cb5bb6766"/>
+				</element>
+				<element kind="textField" uuid="cc9d185a-fbdf-47f3-a6c9-dcc3069963b4" x="500" y="0" width="110" height="30" vTextAlign="Middle" style="Style1">
+					<expression><![CDATA[$F{club}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e8d4ac1-909c-4bdd-9242-42e94c1c621f"/>
+				</element>
+				<element kind="textField" uuid="80fa517b-e096-4a13-8da7-071e04c50669" x="610" y="0" width="100" height="30" vTextAlign="Middle" style="Style1">
+					<expression><![CDATA[$F{marca}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="33092f14-680f-4431-840c-e53a842e5c60"/>
+				</element>
+				<element kind="textField" uuid="dfa5cae7-cab6-4ea9-bd5e-ccb459059639" x="710" y="0" width="60" height="30" vTextAlign="Middle" style="Style1">
+					<expression><![CDATA[$F{fecha}]]></expression>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a096d86b-7848-4c47-9f92-c5e03962bf27"/>
+				</element>
+				<element kind="image" uuid="530e63a4-5981-4418-80e4-fde8a1b97ef1" x="20" y="0" width="30" height="30">
+					<expression><![CDATA[new java.io.ByteArrayInputStream( 
+java.util.Base64.getDecoder().decode(
+ $F{foto}.getBytes()))]]></expression>
+				</element>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="280" splitType="Stretch">
+		<element kind="chart" chartType="bar" uuid="41be14da-af7e-4914-a16e-c729998c8917" x="10" y="70" width="750" height="200" evaluationTime="Report">
+			<dataset kind="category">
+				<series>
+					<seriesExpression><![CDATA[$F{evento}]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{nombre}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{tiempo_en_minutos}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
+				<itemLabel/>
+			</plot>
+		</element>
+		<element kind="staticText" uuid="c541ceed-e394-4ee8-a584-bea2b4ebc0d2" mode="Opaque" x="0" y="10" width="780" height="40" forecolor="#FFFFFF" backcolor="#4FBFE1" fontSize="22.0" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Gráfica de barras de tiempo en minutos de los atletas por evento]]></text>
+		</element>
+	</pageFooter>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>

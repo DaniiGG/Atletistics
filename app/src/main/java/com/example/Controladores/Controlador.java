@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -28,6 +29,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -52,6 +55,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -67,14 +71,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
 
 /**
  *
@@ -94,6 +108,7 @@ public class Controlador implements Initializable {
         vboxResultados.setVisible(true);
         vboxCompeticiones.setVisible(false);
         vboxAtletas.setVisible(false);
+        vboxInformes.setVisible(false);
     }
 
     @FXML
@@ -101,16 +116,18 @@ public class Controlador implements Initializable {
         vboxResultados.setVisible(false);
         vboxCompeticiones.setVisible(true);
         vboxAtletas.setVisible(false);
+        vboxInformes.setVisible(false);
     }
 
     @FXML
     private void mostrarAtletas() {
         vboxResultados.setVisible(false);
         vboxCompeticiones.setVisible(false);
+        vboxInformes.setVisible(false);
         vboxAtletas.setVisible(true);
         actualizarGrid(null);
     }
-
+    
     @FXML
     protected TableView<Resultados> tableViewResultados;
     @FXML
@@ -213,6 +230,8 @@ public class Controlador implements Initializable {
     private VBox vboxCompeticiones;
     @FXML
     private VBox vboxAtletas;
+    @FXML
+    private VBox vboxInformes;
 
     @FXML
     protected Label mensajeSuperpuestoResul;
@@ -220,6 +239,15 @@ public class Controlador implements Initializable {
     protected Label mensajeSuperpuestoCompe;
     @FXML
     protected Label mensajeSuperpuestoAtle;
+    
+    Map parametros = new HashMap();
+    @FXML
+    private WebView wv;
+    
+    @FXML
+    private CheckBox chkIncrustado;
+    @FXML
+    private TextField nombreInforme;
 
     //-----INITIALIZE------
     @Override
@@ -245,6 +273,103 @@ public class Controlador implements Initializable {
         btnCompe.setContentDisplay(javafx.scene.control.ContentDisplay.TOP);
         btnAtle.setContentDisplay(javafx.scene.control.ContentDisplay.TOP);
 
+    }
+    
+    private void lanzaInforme(String rutaInf, Map<String, Object> param, int tipo) {
+        try {
+        // Imprimir la ruta que estás intentando leer
+        System.out.println("Intentando cargar el informe desde la ruta: " + rutaInf);
+
+        InputStream inputStream = getClass().getResourceAsStream(rutaInf);
+        
+        if (inputStream == null) {
+            System.out.println("Error: No se encontró el archivo en la ruta: " + rutaInf);
+            return; // Salir si el archivo no se encuentra
+        }
+
+        // Si encuentra el archivo, cargar el reporte
+        JasperReport report = (JasperReport) JRLoader.loadObject(inputStream);
+        System.out.println("Informe cargado correctamente desde: " + rutaInf);
+            try {
+                // Llena el informe con los datos de la conexión
+                System.out.println(this.conexion);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(report, param, this.conexion);
+
+                if (!jasperPrint.getPages().isEmpty()) {
+
+                    //Exporta el informe a un archivo PDF (necesita librería)
+                    String pdfOutputPath = "informe.pdf";
+                    JasperExportManager.exportReportToPdfFile(jasperPrint, pdfOutputPath);
+
+                    //Exporta el informe a un archivo HTML
+                    String outputHtmlFile = "informeHTML.html";
+                    JasperExportManager.exportReportToHtmlFile(jasperPrint, outputHtmlFile);
+
+                    //Crea un WebView para mostrar la versión HTML del informe
+                    if (tipo == 0) {
+                        wv.getEngine().load(new File(outputHtmlFile).toURI().toString());
+                    } else { //tipo==1
+                        WebView wvnuevo = new WebView();
+                        wvnuevo.getEngine().load(new File(outputHtmlFile).toURI().toString());
+                        StackPane stackPane = new StackPane(wvnuevo);
+                        Scene scene = new Scene(stackPane, 855, 500);
+                        Stage stage = new Stage();
+                        stage.setTitle("Informe en HTML");
+                        stage.initModality(Modality.APPLICATION_MODAL);
+                        stage.setResizable(true);
+                        stage.setScene(scene);
+                        URL imageUrl = getClass().getClassLoader().getResource("img/AtletisticsLogo.jpg");
+                        Image image = new Image(imageUrl.toString());
+                        stage.getIcons().add(image);
+                        stage.show();
+                    }
+                } else {
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Información");
+                    alert.setHeaderText("Alerta de Informe");
+                    //alert.setContentText("La búsqueda " + mititulo.getText() + " no generó páginas");
+                    alert.showAndWait();
+                }
+
+            } catch (JRException e) {
+                System.out.println(e.getMessage());
+                JOptionPane.showMessageDialog(null, "Error al generar el informe: " + e.getMessage());
+            }
+        } catch (JRException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    @FXML
+    //Informe Incrustado/No Incrustado Con parámetros
+    void informe(javafx.event.ActionEvent event) {
+        if (chkIncrustado.isSelected()) {//1 - Informe sencillo SÍ incrustado
+            vboxResultados.setVisible(false);
+            vboxCompeticiones.setVisible(false);
+            vboxAtletas.setVisible(false);
+            vboxInformes.setVisible(true);
+            parametros.put("Parametro", "%" + nombreInforme.getText() + "%");
+           lanzaInforme("/reports/Blank_A4.jasper", parametros, 0);
+        } else {//2 - Informe NO incrustado usa parámetro(nueva ventana) 
+            parametros.put("Parametro", "%" + nombreInforme.getText() + "%");
+            lanzaInforme("/reports/Blank_A4.jasper", parametros, 1);
+        }
+    }
+    
+    @FXML
+    //Informe Incrustado/No Incrustado Con parámetros
+    void informeS(javafx.event.ActionEvent event) {
+        if (chkIncrustado.isSelected()) {//1 - Informe sencillo SÍ incrustado
+            vboxResultados.setVisible(false);
+            vboxCompeticiones.setVisible(false);
+            vboxAtletas.setVisible(false);
+            vboxInformes.setVisible(true);
+            parametros.put("Parametro", "%" + nombreInforme.getText() + "%");
+           lanzaInforme("/reports/Blank_A6.jasper", parametros, 0);
+        } else {//2 - Informe NO incrustado usa parámetro(nueva ventana) 
+            parametros.put("Parametro", "%" + nombreInforme.getText() + "%");
+            lanzaInforme("/reports/Blank_A6.jasper", parametros, 1);
+        }
     }
 
     //------CRUD DE LA TABLA RESULTADOS---------

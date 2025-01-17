@@ -1,0 +1,89 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Blank_A4" language="java" pageWidth="780" pageHeight="842" columnWidth="760" leftMargin="0" rightMargin="20" topMargin="20" bottomMargin="20" uuid="80e69dfb-062c-4c17-8eb0-a2787ab4a2d7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.callouts" value="callouts.1.bounds=-180,60,5,5\ncallouts.1.bg=255,255,0\ncallouts.1.fg=0,0,0\ncallouts.1.text=danie 11/1/25 13\:45\n"/>
+	<style name="Style1" mode="Transparent" backcolor="#05B8FF">
+		<conditionalStyle mode="Opaque" backcolor="#0AD2FA">
+			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></conditionExpression>
+		</conditionalStyle>
+	</style>
+	<query language="sql"><![CDATA[SELECT 
+    c.nombre AS evento, 
+    c.imagen,
+    COUNT(DISTINCT r.dni_atleta) AS total_atletas
+FROM resultados r
+JOIN competiciones c ON r.id_competicion = c.id_competicion
+GROUP BY c.nombre, c.imagen
+ORDER BY total_atletas DESC]]></query>
+	<field name="evento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre"/>
+		<property name="com.jaspersoft.studio.field.label" value="evento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="competiciones"/>
+	</field>
+	<field name="imagen" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="imagen"/>
+		<property name="com.jaspersoft.studio.field.label" value="imagen"/>
+	</field>
+	<field name="total_atletas" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_atletas"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_atletas"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="staticText" uuid="c6fe6900-f4f3-4f7c-9eca-fe4fb27129df" mode="Opaque" x="310" y="0" width="510" height="79" forecolor="#FFFFFF" backcolor="#4FBFE1" fontName="SansSerif" fontSize="45.0" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[Informe resultados]]></text>
+			<box leftPadding="15"/>
+		</element>
+		<element kind="image" uuid="d0f10899-92b4-479c-9d08-e0d81c9119af" stretchType="NoStretch" mode="Opaque" x="-20" y="0" width="330" height="79" forecolor="#C689CC" backcolor="#4FBFE1" hImageAlign="Center">
+			<expression><![CDATA["C:/Users/danie/Downloads/Atletistics_nb.png"]]></expression>
+		</element>
+		<property name="com.jaspersoft.studio.layout"/>
+	</title>
+	<pageHeader height="35" splitType="Stretch"/>
+	<columnHeader height="40" splitType="Stretch">
+		<element kind="staticText" uuid="6360541d-6f59-4cac-b243-3aa36e305283" x="160" y="0" width="80" height="30" bold="true" hTextAlign="Center">
+			<text><![CDATA[Evento]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+		<element kind="staticText" uuid="3d259913-5726-470e-b37a-0d91833494a1" x="70" y="0" width="60" height="30" bold="true">
+			<text><![CDATA[Foto]]></text>
+			<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySql-Docker-Atletistics"/>
+			<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="49" splitType="Stretch">
+			<element kind="textField" uuid="6dc1dc50-6088-439e-ab8d-5f34f654713f" x="160" y="10" width="80" height="30" rotation="None" markup="none" linkType="None" linkTarget="Self" blankWhenNull="false" hTextAlign="Center" vTextAlign="Middle" style="Style1">
+				<expression><![CDATA[$F{evento}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="624f0461-f31d-4854-b0af-3a6ce4da9188"/>
+			</element>
+			<element kind="image" uuid="530e63a4-5981-4418-80e4-fde8a1b97ef1" x="70" y="0" width="50" height="49" linkType="None" linkTarget="Self">
+				<expression><![CDATA[new java.io.ByteArrayInputStream( 
+java.util.Base64.getDecoder().decode(
+ $F{imagen}.getBytes()))]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter splitType="Stretch"/>
+	<pageFooter height="324" splitType="Stretch">
+		<element kind="chart" chartType="pie3D" uuid="11556d76-e8fb-4c0b-87c1-2f2768005973" x="180" y="70" width="448" height="200" evaluationTime="Report">
+			<dataset kind="pie">
+				<series>
+					<keyExpression><![CDATA[$F{evento}]]></keyExpression>
+					<valueExpression><![CDATA[$F{total_atletas}]]></valueExpression>
+					<labelExpression><![CDATA[$F{total_atletas}.toString()+" atletas"]]></labelExpression>
+				</series>
+			</dataset>
+			<plot>
+				<itemLabel/>
+			</plot>
+		</element>
+		<element kind="staticText" uuid="b20fa121-2c48-4e85-99f1-e91b3c422e6b" mode="Opaque" x="0" y="0" width="780" height="40" forecolor="#FFFFFF" backcolor="#4FBFE1" fontSize="22.0" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Gráfica circular de número de atletas por carrera]]></text>
+		</element>
+		<element kind="frame" uuid="2c9f0baf-743c-4346-bf4d-fe2f7f179d3c" mode="Opaque" x="0" y="40" width="780" height="3" backcolor="#000103"/>
+	</pageFooter>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>

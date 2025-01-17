@@ -30,6 +30,9 @@ implementation 'org.controlsfx:controlsfx:11.1.2'
 implementation 'org.openjfx:javafx-web:23'
 implementation 'org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0'
 implementation 'com.google.code.gson:gson:2.8.8'
+implementation'net.sf.jasperreports:jasperreports:7.0.1'
+implementation'net.sf.jasperreports:jasperreports-pdf:7.0.0'
+implementation'net.sf.jasperreports:jasperreports-charts:7.0.1'
 
 }
 
@@ -40,7 +43,7 @@ sourceSets {
   main {
     resources {
         srcDirs = ["src/main/java","src/main/resources"]
-        includes = ["**/*.fxml","**/*.properties", "**/*.jpg", "**/*.png", "**/*.jpeg","**/*.css","**/*.ttf"]  //Importante para poder abrir una extensión no reconocida
+        includes = ["**/*.fxml","**/*.properties", "**/*.jpg", "**/*.png", "**/*.jpeg","**/*.css","**/*.ttf", "**/*.jasper"]  //Importante para poder abrir una extensión no reconocida
     }
   }
 }

@@ -52,7 +52,7 @@
             <CheckBox fx:id="activoCheck" styleClass="form-checkbox" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             
             <Label styleClass="form-label" text="Foto" GridPane.rowIndex="6" />
-            <Button fx:id="fotoBtn" styleClass="form-button-secondary" text="Selecc. Imagen" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Button fx:id="fotoBtn" onAction="#seleccionarFoto" styleClass="form-button-secondary" text="Selecc. Imagen" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>
       </GridPane>
       <HBox alignment="CENTER" prefHeight="60.0" spacing="15">

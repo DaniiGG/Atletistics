@@ -42,7 +42,7 @@
             <TextField fx:id="txtPremio" maxWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Label text="Premio" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <Label text="Imagen" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-            <Button fx:id="seleccImg" mnemonicParsing="false" text="Selecc. Imagen" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Button fx:id="fotoBtn" mnemonicParsing="false" onAction="#seleccionarFoto" text="Selecc. Imagen" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <DatePicker fx:id="txtFecha" maxWidth="100.0" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
          <VBox.margin>
