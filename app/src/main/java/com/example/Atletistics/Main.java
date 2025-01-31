@@ -2,16 +2,14 @@ package com.example.Atletistics; //Modificar al package correcto
 
 import java.io.File;
 import java.net.URL;
-import java.sql.Connection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
+import com.example.Controladores.Controlador; // Importar correctamente el controlador
 
 /** 
  * Plantilla JAVAFX
@@ -28,6 +26,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
+        // Cargar el icono
         URL imageUrl = getClass().getClassLoader().getResource("img/AtletisticsLogo.jpg");
         if (imageUrl != null) {
             Image image = new Image(imageUrl.toString());
@@ -35,19 +34,25 @@ public class Main extends Application {
         } else {
             System.out.println("No se encontró la imagen en el ClassLoader.");
         }
-            
-        Parent root = FXMLLoader.load(getClass().getResource("../Ventanas/Atletistics.fxml"));
 
+        // Cargar el archivo FXML correctamente
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/Ventanas/Atletistics.fxml"));
+        Parent root = loader.load(); // Ahora podemos obtener el controlador
+
+        // Obtener el controlador y configurar el evento de teclado
+        Controlador controller = loader.getController();
+
+        // Crear la escena correctamente
+        Scene scene = new Scene(root);
+        scene.setOnKeyPressed(controller::handleKeyPress); // Ahora `scene` está definido
         
-        
-        Scene scene=new Scene(root);
+        // Agregar estilos
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-        scene.getStylesheets().add(getClass().getResource("../Css/atletistics.css").toString());
-        
+        scene.getStylesheets().add(getClass().getResource("/com/example/Css/atletistics.css").toString());
+
+        // Configurar la ventana principal
         primaryStage.setScene(scene);
         primaryStage.setTitle("Atletistics");
-
         primaryStage.show();
     }
-
 }

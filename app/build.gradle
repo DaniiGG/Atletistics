@@ -20,7 +20,7 @@ repositories {
 javafx {
     version = "23"
     modules = [ 'javafx.base', 'javafx.swing', 'javafx.graphics', 'javafx.controls', 
-'javafx.fxml', 'javafx.media']
+'javafx.fxml', 'javafx.media', 'javafx.web']
 }
 
 dependencies {
@@ -36,26 +36,32 @@ implementation'net.sf.jasperreports:jasperreports-charts:7.0.1'
 
 }
 
-mainClassName = 'Atletistics.Main'
+mainClassName = 'com.example.Atletistics.Main'
 
 //Para el empaquetado
 sourceSets {
   main {
     resources {
         srcDirs = ["src/main/java","src/main/resources"]
-        includes = ["**/*.fxml","**/*.properties", "**/*.jpg", "**/*.png", "**/*.jpeg","**/*.css","**/*.ttf", "**/*.jasper"]  //Importante para poder abrir una extensión no reconocida
+        includes = ["**/*.fxml","**/*.properties", "**/*.jpg", "**/*.png", "**/*.jpeg","**/*.css","**/*.ttf", "**/*.jasper", "**/*.html"]  //Importante para poder abrir una extensión no reconocida
     }
   }
 }
 
 jar {
- duplicatesStrategy 'exclude' //Excluye duplicados en ficheros de configuración
-    manifest { //Genera el fichero MANIFEST.MF que hay dentro del jar
-        attributes 'Main-Class': mainClassName // Clase principal del proyecto 
+    duplicatesStrategy = 'exclude' // Evitar duplicados
+    manifest { 
+        attributes(
+            'Main-Class': 'com.example.Atletistics.Main' // Clase principal
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
+
 // Para llamar al jar utilizaremos
-// java --module-path C:\javafx-sdk-23\lib --add-modules javafx.base,javafx.controls,javafx.fxml -jar javafx-ejemplos-basicos.jar     
+// java --module-path D:\JDK-23 --add-modules javafx.base,javafx.controls,javafx.fxml -jar app.jar     
 
 run {
     jvmArgs = [

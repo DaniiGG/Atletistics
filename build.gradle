@@ -37,14 +37,14 @@ implementation'net.sf.jasperreports:jasperreports-charts:7.0.1'
 
 }
 
-mainClassName = 'Atletistics.Main'
+mainClassName = 'com.example.Atletistics.Main'
 
 //Para el empaquetado
 sourceSets {
   main {
     resources {
         srcDirs = ["src/main/java","src/main/resources"]
-        includes = ["**/*.fxml","**/*.properties", "**/*.jpg", "**/*.png", "**/*.jpeg","**/*.css" ,"**/*.jasper" ]  //Importante para poder abrir una extensión no reconocida
+        includes = ["**/*.fxml","**/*.properties", "**/*.jpg", "**/*.png", "**/*.jpeg","**/*.css" ,"**/*.jasper", "**/*.html" ]  //Importante para poder abrir una extensión no reconocida
     }
   }
 }
@@ -52,7 +52,7 @@ sourceSets {
 jar {
  duplicatesStrategy 'exclude' //Excluye duplicados en ficheros de configuración
     manifest { //Genera el fichero MANIFEST.MF que hay dentro del jar
-        attributes 'Main-Class': mainClassName // Clase principal del proyecto 
+        attributes 'Main-Class': 'com.example.Atletistics.Main' // Clase principal del proyecto 
     }
 }
 // Para llamar al jar utilizaremos

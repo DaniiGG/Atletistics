@@ -32,19 +32,19 @@
         </rowConstraints>
          <children>
             <Label styleClass="form-label" text="Nombre Atleta" />
-            <ComboBox fx:id="comboAtleta" styleClass="form-combo" GridPane.columnIndex="1" />
+            <ComboBox fx:id="comboAtleta" promptText="Juan García" styleClass="form-combo" GridPane.columnIndex="1" />
             
             <Label styleClass="form-label" text="Marca" GridPane.rowIndex="1" />
-            <TextField fx:id="txtMarca" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtMarca" promptText="1h 20m" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             
             <Label styleClass="form-label" text="Puesto" GridPane.rowIndex="2" />
-            <TextField fx:id="txtPuesto" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtPuesto" promptText="1" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             
             <Label styleClass="form-label" text="Dorsal" GridPane.rowIndex="3" />
-            <TextField fx:id="txtDorsal" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="txtDorsal" promptText="231" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             
             <Label styleClass="form-label" text="Evento" GridPane.rowIndex="4" />
-            <ComboBox fx:id="comboCompe" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <ComboBox fx:id="comboCompe" promptText="Maraton Madrid" styleClass="form-combo" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
       <HBox alignment="CENTER" prefHeight="60.0" spacing="15">

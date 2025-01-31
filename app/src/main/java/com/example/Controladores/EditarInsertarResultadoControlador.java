@@ -118,7 +118,7 @@ public class EditarInsertarResultadoControlador implements Initializable {
 
         Validador.validacionNumero(validationPuesto, txtPuesto, 1, 30, "Los puestos pueden ser de 1 a 30");
         Validador.validacionNumero(validationDorsal, txtDorsal, 3, 1000, "Los dorsales pueden ser de 1 a 1000");
-        Validador.validacionTexto(validationMarca, txtMarca, 3, 50, "Las marcas deben tener entre 2 y 15 caracteres");
+        Validador.validacionTexto(validationMarca, txtMarca, 2, 50, "Las marcas deben tener entre 2 y 15 caracteres");
 
         Validador.validacionCampoVacio(validationAtleta, comboAtleta, "Debe seleccionar un atleta");
         Validador.validacionCampoVacio(validationCompe, comboCompe, "Debe seleccionar una competición");

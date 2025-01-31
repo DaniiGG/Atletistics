@@ -89,6 +89,10 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 
 /**
  *
@@ -127,7 +131,7 @@ public class Controlador implements Initializable {
         vboxAtletas.setVisible(true);
         actualizarGrid(null);
     }
-    
+
     @FXML
     protected TableView<Resultados> tableViewResultados;
     @FXML
@@ -201,6 +205,18 @@ public class Controlador implements Initializable {
     private Button btnResul;
 
     @FXML
+    private Button informeS;
+
+    @FXML
+    private Button informeC;
+
+    @FXML
+    private Button exportarJSON;
+
+    @FXML
+    private Button exportarCSV;
+
+    @FXML
     private GridPane gridMenu;
 
     @FXML
@@ -239,11 +255,11 @@ public class Controlador implements Initializable {
     protected Label mensajeSuperpuestoCompe;
     @FXML
     protected Label mensajeSuperpuestoAtle;
-    
+
     Map parametros = new HashMap();
     @FXML
     private WebView wv;
-    
+
     @FXML
     private CheckBox chkIncrustado;
     @FXML
@@ -269,27 +285,29 @@ public class Controlador implements Initializable {
         configurarComboBoxAtletas();
         configurarComboBoxAtletasGrid(comboAtleta2);
         establecerIconoMenu(btnResul, btnCompe, btnAtle);
+        establecerIconoInforme(informeS, informeC);
+        establecerIconoExport(exportarJSON, exportarCSV);
         btnResul.setContentDisplay(javafx.scene.control.ContentDisplay.TOP);
         btnCompe.setContentDisplay(javafx.scene.control.ContentDisplay.TOP);
         btnAtle.setContentDisplay(javafx.scene.control.ContentDisplay.TOP);
 
     }
-    
+
     private void lanzaInforme(String rutaInf, Map<String, Object> param, int tipo) {
         try {
-        // Imprimir la ruta que estás intentando leer
-        System.out.println("Intentando cargar el informe desde la ruta: " + rutaInf);
+            // Imprimir la ruta que estás intentando leer
+            System.out.println("Intentando cargar el informe desde la ruta: " + rutaInf);
 
-        InputStream inputStream = getClass().getResourceAsStream(rutaInf);
-        
-        if (inputStream == null) {
-            System.out.println("Error: No se encontró el archivo en la ruta: " + rutaInf);
-            return; // Salir si el archivo no se encuentra
-        }
+            InputStream inputStream = getClass().getResourceAsStream(rutaInf);
 
-        // Si encuentra el archivo, cargar el reporte
-        JasperReport report = (JasperReport) JRLoader.loadObject(inputStream);
-        System.out.println("Informe cargado correctamente desde: " + rutaInf);
+            if (inputStream == null) {
+                System.out.println("Error: No se encontró el archivo en la ruta: " + rutaInf);
+                return; // Salir si el archivo no se encuentra
+            }
+
+            // Si encuentra el archivo, cargar el reporte
+            JasperReport report = (JasperReport) JRLoader.loadObject(inputStream);
+            System.out.println("Informe cargado correctamente desde: " + rutaInf);
             try {
                 // Llena el informe con los datos de la conexión
                 System.out.println(this.conexion);
@@ -298,8 +316,8 @@ public class Controlador implements Initializable {
                 if (!jasperPrint.getPages().isEmpty()) {
 
                     //Exporta el informe a un archivo PDF (necesita librería)
-                    String pdfOutputPath = "informe.pdf";
-                    JasperExportManager.exportReportToPdfFile(jasperPrint, pdfOutputPath);
+                    //String pdfOutputPath = "informe.pdf";
+                    //JasperExportManager.exportReportToPdfFile(jasperPrint, pdfOutputPath);
 
                     //Exporta el informe a un archivo HTML
                     String outputHtmlFile = "informeHTML.html";
@@ -339,7 +357,7 @@ public class Controlador implements Initializable {
             System.out.println(ex.getMessage());
         }
     }
-    
+
     @FXML
     //Informe Incrustado/No Incrustado Con parámetros
     void informe(javafx.event.ActionEvent event) {
@@ -349,13 +367,13 @@ public class Controlador implements Initializable {
             vboxAtletas.setVisible(false);
             vboxInformes.setVisible(true);
             parametros.put("Parametro", "%" + nombreInforme.getText() + "%");
-           lanzaInforme("/reports/Blank_A4.jasper", parametros, 0);
+            lanzaInforme("/reports/Blank_A4.jasper", parametros, 0);
         } else {//2 - Informe NO incrustado usa parámetro(nueva ventana) 
             parametros.put("Parametro", "%" + nombreInforme.getText() + "%");
             lanzaInforme("/reports/Blank_A4.jasper", parametros, 1);
         }
     }
-    
+
     @FXML
     //Informe Incrustado/No Incrustado Con parámetros
     void informeS(javafx.event.ActionEvent event) {
@@ -365,7 +383,7 @@ public class Controlador implements Initializable {
             vboxAtletas.setVisible(false);
             vboxInformes.setVisible(true);
             parametros.put("Parametro", "%" + nombreInforme.getText() + "%");
-           lanzaInforme("/reports/Blank_A6.jasper", parametros, 0);
+            lanzaInforme("/reports/Blank_A6.jasper", parametros, 0);
         } else {//2 - Informe NO incrustado usa parámetro(nueva ventana) 
             parametros.put("Parametro", "%" + nombreInforme.getText() + "%");
             lanzaInforme("/reports/Blank_A6.jasper", parametros, 1);
@@ -375,7 +393,7 @@ public class Controlador implements Initializable {
     //------CRUD DE LA TABLA RESULTADOS---------
     private void añadirEditarResultado(String titulo, Resultados resultado) {
         try {
-            loader = new FXMLLoader(getClass().getResource("../Ventanas/editarInsertarResultado.fxml"));
+            loader = new FXMLLoader(getClass().getResource("/com/example/Ventanas/editarInsertarResultado.fxml"));
             Parent root = loader.load();
             EditarInsertarResultadoControlador controller = loader.getController();
             controller.setControladorPrincipal(this);
@@ -458,7 +476,7 @@ public class Controlador implements Initializable {
     //----------CRUD DE LA TABLA COMPETICIONES---------------
     private void añadirEditarCompeticion(String titulo, Competicion competicion) {
         try {
-            loader = new FXMLLoader(getClass().getResource("../Ventanas/editarInsertarCompeticion.fxml"));
+            loader = new FXMLLoader(getClass().getResource("/com/example/Ventanas/editarInsertarCompeticion.fxml"));
             Parent root = loader.load();
             EditarInsertarCompeticionControlador controller = loader.getController();
 
@@ -534,7 +552,7 @@ public class Controlador implements Initializable {
     //------------CRUD DE LA TABLA ATLETAS--------------
     public void añadirEditarAtleta(String titulo, Atleta atleta) {
         try {
-            loader = new FXMLLoader(getClass().getResource("../Ventanas/editarInsertarAtleta.fxml"));
+            loader = new FXMLLoader(getClass().getResource("/com/example/Ventanas/editarInsertarAtleta.fxml"));
             Parent root = loader.load();
             EditarInsertarAtletaControlador controller = loader.getController();
 
@@ -1026,7 +1044,7 @@ public class Controlador implements Initializable {
     //----ABRE LA VENTANA DEL MAPA-----
     private void abrirMapa(String lugar) {
         try {
-            loader = new FXMLLoader(getClass().getResource("../Ventanas/MapView.fxml"));
+            loader = new FXMLLoader(getClass().getResource("/com/example/Ventanas/MapView.fxml"));
             Parent root = loader.load();
 
             MapaControlador controller = loader.getController();
@@ -1036,6 +1054,27 @@ public class Controlador implements Initializable {
             Stage stage = new Stage();
             stage.setTitle("Mapa de: " + lugar);
             stage.setScene(new Scene(root));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void handleKeyPress(KeyEvent event) {
+        if (event.getCode() == KeyCode.F1) {
+            openWebViewWindow();
+        }
+    }
+
+    private void openWebViewWindow() {
+        try {
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaa");
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/Ventanas/Manual.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("WebView Window");
+            stage.setScene(new Scene(root, 800, 600));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1138,6 +1177,16 @@ public class Controlador implements Initializable {
         Controlador.configurarIconoConHover(botonB, "img/iconoCruz.png", "img/iconoCruzHover.png", 16, 16);
     }
 
+    public static void establecerIconoInforme(Button botonE, Button botonB) {
+        Controlador.configurarIconoConHover(botonE, "img/iconoInforme.png", "img/iconoInformeHover.png", 16, 16);
+        Controlador.configurarIconoConHover(botonB, "img/iconoInforme.png", "img/iconoInformeHover.png", 16, 16);
+    }
+
+    public static void establecerIconoExport(Button botonE, Button botonB) {
+        Controlador.configurarIconoConHover(botonE, "img/iconoJson.png", "img/iconoJsonHover.png", 16, 16);
+        Controlador.configurarIconoConHover(botonB, "img/iconoCsv.png", "img/iconoCsvHover.png", 16, 16);
+    }
+
     //----CONFIGURACIONES DEL COMBOBOX DEL FILTRO----
     private <T> void configurarComboBoxGenerico(
             ComboBox<String> comboBox,
@@ -1226,15 +1275,19 @@ public class Controlador implements Initializable {
 
         TextField editor = comboBox.getEditor();
         editor.textProperty().addListener((obs, oldText, newText) -> {
-            filteredList.setPredicate(item -> item.toLowerCase().startsWith(newText.toLowerCase()));
-            if (!comboBox.isShowing()) {
-                comboBox.show();
-            }
-        });
+            if (newText != null) {
+                int caretPosition = editor.getCaretPosition();
 
-        comboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                editor.positionCaret(editor.getText().length());
+                String trimmedText = newText.toLowerCase().stripLeading(); 
+                filteredList.setPredicate(item -> item.toLowerCase().contains(trimmedText));
+
+                if (!comboBox.isShowing()) {
+                    comboBox.show();
+                }
+
+                if (caretPosition <= editor.getText().length()) {
+                    editor.positionCaret(caretPosition);
+                }
             }
         });
     }
@@ -1332,7 +1385,9 @@ public class Controlador implements Initializable {
 
     @FXML
     void exportarJSON() throws IOException {
-        exportarJSON(tableViewResultados, "src/main/resources/json/resultados.json");
+        String downloadsPath = Paths.get(System.getProperty("user.home"), "Downloads", "resultados.json").toString();
+        exportarJSON(tableViewResultados, downloadsPath);
+
     }
 
     public <T> void exportarCSV(TableView<T> tableView, String filePath) {
@@ -1364,7 +1419,8 @@ public class Controlador implements Initializable {
 
     @FXML
     void exportarCSV() throws IOException {
-        exportarCSV(tableViewResultados, "src/main/resources/csv/resultados.csv");
+        String downloadsPath = Paths.get(System.getProperty("user.home"), "Downloads", "resultados.csv").toString();
+        exportarCSV(tableViewResultados, downloadsPath);
     }
 
     private <T> void menuContext(TableView<T> tableView,

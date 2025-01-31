@@ -33,19 +33,19 @@
          </rowConstraints>
          <children>
             <Label styleClass="form-label" text="Nombre" />
-            <TextField fx:id="txtNombre" styleClass="form-textfield" GridPane.columnIndex="1" />
+            <TextField fx:id="txtNombre" promptText="Milla nocturna" styleClass="form-textfield" GridPane.columnIndex="1" />
             
             <Label styleClass="form-label" text="Tipo" GridPane.rowIndex="1" />
-            <TextField fx:id="txtTipo" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtTipo" promptText="Carrera" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             
             <Label styleClass="form-label" text="Lugar" GridPane.rowIndex="2" />
-            <TextField fx:id="txtLugar" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtLugar" promptText="Valencia" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             
             <Label styleClass="form-label" text="Fecha" GridPane.rowIndex="3" />
-            <DatePicker fx:id="datePickerFecha" styleClass="form-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <DatePicker fx:id="datePickerFecha" promptText="--/--/----" styleClass="form-datepicker" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             
             <Label styleClass="form-label" text="Premio" GridPane.rowIndex="4" />
-            <TextField fx:id="txtPremio" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="txtPremio" promptText="1200" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             
             <Label styleClass="form-label" text="Imagen" GridPane.rowIndex="5" />
             <Button fx:id="fotoBtn" onAction="#seleccionarFoto" styleClass="form-button-secondary" text="Selecc. Imagen" GridPane.columnIndex="1" GridPane.rowIndex="5" />

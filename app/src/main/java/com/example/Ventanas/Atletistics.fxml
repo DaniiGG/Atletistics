@@ -121,8 +121,8 @@
                     </StackPane>
                     <HBox prefWidth="200.0">
                         <children>
-                            <Button fx:id="exportarJSON" onAction="#exportarJSON" prefHeight="26.0" prefWidth="146.0" styleClass="btn, btn-info" text="Exportar a _JSON" />
-                            <Button fx:id="exportarCSV" onAction="#exportarCSV" prefHeight="26.0" prefWidth="140.0" styleClass="btn, btn-info" text="Exportar a _CSV">
+                            <Button fx:id="exportarJSON" onAction="#exportarJSON" prefHeight="26.0" prefWidth="146.0" styleClass="btn, btn-info" text="Exportar _JSON" />
+                            <Button fx:id="exportarCSV" onAction="#exportarCSV" prefHeight="26.0" prefWidth="140.0" styleClass="btn, btn-info" text="Exportar _CSV">
                                 <HBox.margin>
                                     <Insets left="20.0" />
                                 </HBox.margin>
@@ -133,13 +133,13 @@
                            <Insets top="5.0" />
                         </HBox.margin>
                      </CheckBox>
-                     <TextField fx:id="nombreInforme" promptText="Busca por nombre" />
-                     <Button fx:id="informeS" onAction="#informeS" prefHeight="26.0" prefWidth="98.0" styleClass="btn, btn-info" text="Informe S.">
+                     <TextField fx:id="nombreInforme" prefHeight="26.0" prefWidth="116.0" promptText="Busca por nombre" />
+                     <Button fx:id="informeS" onAction="#informeS" prefHeight="26.0" prefWidth="125.0" styleClass="btn, btn-info" text="Informe _S.">
                         <HBox.margin>
                            <Insets left="5.0" right="5.0" />
                         </HBox.margin>
                      </Button>
-                     <Button fx:id="informe" onAction="#informe" prefHeight="26.0" prefWidth="98.0" styleClass="btn, btn-info" text="Informe C.">
+                     <Button fx:id="informeC" onAction="#informe" prefHeight="26.0" prefWidth="124.0" styleClass="btn, btn-info" text="_Informe C.">
                         <HBox.margin>
                            <Insets left="20.0" right="20.0" />
                         </HBox.margin>

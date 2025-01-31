@@ -34,19 +34,19 @@
          </rowConstraints>
          <children>
             <Label styleClass="form-label" text="DNI" />
-            <TextField fx:id="txtDni" styleClass="form-textfield" GridPane.columnIndex="1" />
+            <TextField fx:id="txtDni" promptText="12345678A" styleClass="form-textfield" GridPane.columnIndex="1" />
             
             <Label styleClass="form-label" text="Nombre" GridPane.rowIndex="1" />
-            <TextField fx:id="txtNombre" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtNombre" promptText="Juan" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             
             <Label styleClass="form-label" text="Apellidos" GridPane.rowIndex="2" />
-            <TextField fx:id="txtApellidos" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtApellidos" promptText="García Fernández" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             
             <Label styleClass="form-label" text="Edad" GridPane.rowIndex="3" />
-            <TextField fx:id="txtEdad" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="txtEdad" promptText="28" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             
             <Label styleClass="form-label" text="Club" GridPane.rowIndex="4" />
-            <TextField fx:id="txtClub" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="txtClub" promptText="Club Atletismo Maracena" styleClass="form-textfield" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             
             <Label styleClass="form-label" text="Activo" GridPane.rowIndex="5" />
             <CheckBox fx:id="activoCheck" styleClass="form-checkbox" GridPane.columnIndex="1" GridPane.rowIndex="5" />
